@@ -7,5 +7,11 @@ gem 'mysql2'
 gem 'rabl'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails', '2.14'
+  gem "factory_girl_rails", "~> 4.0"
+  gem "awesome_print"
+end
+
+group :test do
+  gem 'database_cleaner'
 end
