@@ -1,3 +1,3 @@
 object @task
 
-attributes :id, :name
+attributes :id, :name, :description

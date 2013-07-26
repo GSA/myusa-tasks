@@ -46,6 +46,37 @@ describe "api", type: :integration do
       end
     end
 
+    context "POST api/v1/tasks/" do
+
+      let(:url) { "api/v1/tasks" }
+      let(:params) { {"name"=>"My new task", "description"=>"My new task description"} }
+      let(:expected_response) {
+        {"task"=>{"id"=>Task.last.id, "name"=>"My new task", "description"=>"My new task description"}}
+      }
+
+      context "correct attributes" do
+        it "responds the created record" do
+          post url, params
+          response.should be_success
+          JSON.parse(response.body).should include(expected_response)
+        end
+      end
+
+      context "missing required attributes" do
+        required_attributes = ["name","description"]
+        required_attributes.each do |attrib|
+          it "responds with an error message for missing #{attrib}" do
+            params.delete(attrib)
+            post url, params
+            response.should_not be_success
+            JSON.parse(response.body).should include(
+              {"message"=>"The record was not saved due to errors","errors"=>{ attrib =>["can't be blank"]} }
+            )
+          end
+        end
+
+      end
+    end
 
   end
 end
