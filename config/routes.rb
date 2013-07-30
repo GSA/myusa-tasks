@@ -5,4 +5,6 @@ MygovTasks::Application.routes.draw do
       resources :task_items, except: [:new, :edit]
     end
   end
+
+  match "*path" => "application#xss_options_request", :via => :options
 end

@@ -10,6 +10,7 @@ group :development, :test do
   gem 'rspec-rails', '2.14'
   gem "factory_girl_rails", "~> 4.0"
   gem "awesome_print"
+  gem 'pry-rails'
 end
 
 group :test do

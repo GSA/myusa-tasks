@@ -12,12 +12,12 @@ module Api
       end
 
       def create
-        @task = Task.new(params[:task])
+        @task = Task.new(name: params[:name], description: params[:description])
 
         if @task.save
-          render json: @task, status: :created, location: @task
+          render 'api/v1/tasks/create'
         else
-          render json: @task.errors, status: :unprocessable_entity
+          render json: {errors: @task.errors, message: "The record was not saved due to errors"}, status: 500
         end
       end
 
