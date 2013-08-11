@@ -13,7 +13,7 @@ module Api
       end
 
       def create
-        @task_item = TaskItem.new(name: params[:name], task_id: params[:task_id])
+        @task_item = TaskItem.new(name: params[:name], task_id: params[:task_id], description: params[:description])
 
         TaskItem.transaction do
           if @task_item.save

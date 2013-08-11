@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130811184712) do
+ActiveRecord::Schema.define(version: 20130811185417) do
 
   create_table "links", force: true do |t|
     t.integer  "task_item_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20130811184712) do
     t.integer  "task_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   create_table "tasks", force: true do |t|

@@ -13,8 +13,16 @@ describe "api", type: :integration do
       let(:url) { "api/v1/task_items" }
       let(:expected_response) {
         [
-          {"task_item"=>{"id"=>task_item_1.id, "name"=>"Task 1", "task_id"=>task.id}},
-          {"task_item"=>{"id"=>task_item_2.id, "name"=>"Task 2", "task_id"=>task.id}}
+          {"task_item"=>{"id"=>task_item_1.id,
+                         "name"=>"Task 1",
+                         "task_id"=>task.id,
+                         "description"=>task_item_1.description
+                         }},
+          {"task_item"=>{"id"=>task_item_2.id,
+                         "name"=>"Task 2",
+                         "task_id"=>task.id,
+                         "description"=>task_item_2.description
+                         }}
         ]
       }
 
@@ -36,6 +44,7 @@ describe "api", type: :integration do
             "id"=>task_item_2.id,
             "name"=>"Task 2",
             "task_id"=>task.id,
+            "description"=>task_item_2.description,
             "links"=>[
               {"link"=>{"name"=>"Groovy test link 1", "url"=>"http://some/url/1"}},
               {"link"=>{"name"=>"Groovy test link 2", "url"=>"http://some/url/2"}}
