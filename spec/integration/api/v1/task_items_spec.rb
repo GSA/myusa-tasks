@@ -6,6 +6,8 @@ describe "api", type: :integration do
     let(:task) { FactoryGirl.create(:task_with_task_items) }
     let(:task_item_1) { task.task_items[0] }
     let(:task_item_2) { task.task_items[1] }
+    let(:link_1) { Link.create(name: "Groovy test link 1", url: "http://some/url/1", task_item_id: task_item_2.id) }
+    let(:link_2) { Link.create(name: "Groovy test link 2", url: "http://some/url/2", task_item_id: task_item_2.id) }
 
     context "GET api/v1/task_items" do
       let(:url) { "api/v1/task_items" }
@@ -33,13 +35,20 @@ describe "api", type: :integration do
           {
             "id"=>task_item_2.id,
             "name"=>"Task 2",
-            "task_id"=>task.id
+            "task_id"=>task.id,
+            "links"=>[
+              {"link"=>{"name"=>"Groovy test link 1", "url"=>"http://some/url/1"}},
+              {"link"=>{"name"=>"Groovy test link 2", "url"=>"http://some/url/2"}}
+            ]
           }
         }
       }
 
       it "gets information for a specific task" do
         task
+        link_1
+        link_2
+
         get url
         response.should be_success
         expect(JSON.parse(response.body)).to eq expected_response
