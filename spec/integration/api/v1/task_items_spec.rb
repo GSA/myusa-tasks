@@ -59,14 +59,51 @@ describe "api", type: :integration do
       let(:url) { "api/v1/task_items" }
       let(:params) { {"name"=>"My new task item", "task_id"=>1234} }
       let(:expected_response) {
-        {"task_item"=>{"id"=>TaskItem.last.id, "name"=>"My new task item", "task_id"=>1234}}
+        {"task_item"=>{"id"=>TaskItem.last.id, "name"=>"My new task item", "task_id"=>1234, "links"=>[]}}
+      }
+      let(:expected_response_with_links) {
+        {"task_item"=>{
+                        "id"=>TaskItem.last.id,
+                        "name"=>"My new task item",
+                        "task_id"=>1234,
+                        "links"=>[
+                          "link"=>{"name"=>"task link 1", "url"=>"http://some/link/1"}
+                        ]
+                      }
+        }
       }
 
-      context "correct attributes" do
+      context "correct task attributes" do
         it "responds with the created record" do
           post url, params
           response.should be_success
-          JSON.parse(response.body).should eq expected_response
+          expect(JSON.parse(response.body)).to eq expected_response
+          expect(TaskItem.count).to eq 1
+        end
+
+        it "creates associated links with correct attributes" do
+          updated_params = params.merge("links"=>[
+                                  {"name"=>"task link 1", "url"=>"http://some/link/1"}
+                                ])
+          post url, updated_params
+          response.should be_success
+          expect(JSON.parse(response.body)).to eq expected_response_with_links
+          expect(TaskItem.count).to eq 1
+          expect(Link.count).to eq 1
+        end
+
+        it "returns 500 with associated links with incorrect attributes" do
+          updated_params = params.merge("links"=>[
+                                  {"name"=>"task link 1", "url"=>"http://some/link/1"}
+                                ])
+          post url, updated_params.delete("name")
+          response.should_not be_success
+          expect(JSON.parse(response.body)).to include(
+            {"message"=>"The record was not saved due to errors"}
+          )
+          expect(response.status).to eq 500
+          expect(TaskItem.count).to eq 0
+          expect(Link.count).to eq 0
         end
       end
 
@@ -80,6 +117,7 @@ describe "api", type: :integration do
             JSON.parse(response.body).should include(
               {"message"=>"The record was not saved due to errors","errors"=>{ attrib =>["can't be blank"]} }
             )
+          expect(TaskItem.count).to eq 0
           end
         end
 

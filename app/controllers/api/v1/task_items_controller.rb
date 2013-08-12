@@ -15,10 +15,16 @@ module Api
       def create
         @task_item = TaskItem.new(name: params[:name], task_id: params[:task_id])
 
-        if @task_item.save
-          render 'api/v1/task_items/create'
-        else
-          render json: {errors: @task_item.errors, message: "The record was not saved due to errors"}, status: 500
+        TaskItem.transaction do
+          if @task_item.save
+            if links = params[:links]
+              links.each { |link| Link.create!(name: link['name'], url: link['url'], task_item_id: @task_item.id)}
+            end
+
+            render 'api/v1/task_items/create'
+          else
+            render json: {errors: @task_item.errors, message: "The record was not saved due to errors"}, status: 500
+          end
         end
       end
 
