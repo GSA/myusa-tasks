@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :task_item do
-    name "MyString"
+    name "My Ultimate Test Task Item"
+    description "A test description for my ultimate task item"
   end
 end
