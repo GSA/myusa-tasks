@@ -12,8 +12,19 @@ describe "api", type: :integration do
       let(:url) { "api/v1/tasks" }
       let(:expected_response) {
         [
-          {"task"=>{"id"=>@task1.id, "name"=>"My first task", "description"=>"My first task description"}},
-          {"task"=>{"id"=>@task2.id, "name"=>"My second task with task items", "description"=>"My second task description"}}
+          {"task"=>{"id"=>@task1.id,
+            "name"=>"My first task",
+            "description"=>"My first task description",
+            "task_items"=>[]}
+            },
+            {"task"=>{"id"=>@task2.id,
+              "name"=>"My second task with task items",
+            "description"=>"My second task description",
+            "task_items"=> [
+              {"task_item"=>{"id"=>@task2.task_items[0].id, "name"=>@task2.task_items[0].name}},
+              {"task_item"=>{"id"=>@task2.task_items[1].id, "name"=>@task2.task_items[1].name}}
+              ]
+            }}
         ]
       }
 
