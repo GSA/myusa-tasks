@@ -1,8 +1,11 @@
 class TaskItem < ActiveRecord::Base
   belongs_to :task
-  has_many :links
+  validates_presence_of :task
+
+  has_many :links, inverse_of: :task_item
 
   validates_presence_of :name
-  validates_presence_of :task_id
+
+  accepts_nested_attributes_for :links
 
 end

@@ -66,15 +66,16 @@ describe "api", type: :integration do
 
     context "POST api/v1/task_items/" do
       let(:url) { "api/v1/task_items" }
-      let(:params) { {"name"=>"My new task item", "task_id"=>1234} }
+      let(:task_without_task_items) { FactoryGirl.create(:task) }
+      let(:params) { {"name"=>"My new task item", "task_id"=>task_without_task_items.id} }
       let(:expected_response) {
-        {"task_item"=>{"id"=>TaskItem.last.id, "name"=>"My new task item", "task_id"=>1234, "links"=>[]}}
+        {"task_item"=>{"id"=>TaskItem.last.id, "name"=>"My new task item", "task_id"=>task_without_task_items.id, "links"=>[]}}
       }
       let(:expected_response_with_links) {
         {"task_item"=>{
                         "id"=>TaskItem.last.id,
                         "name"=>"My new task item",
-                        "task_id"=>1234,
+                        "task_id"=>task_without_task_items.id,
                         "links"=>[
                           "link"=>{"name"=>"task link 1", "url"=>"http://some/link/1"}
                         ]
@@ -83,6 +84,11 @@ describe "api", type: :integration do
       }
 
       context "correct task attributes" do
+
+        before do
+          TaskItem.all.map(&:destroy)
+        end
+
         it "responds with the created record" do
           post url, params
           response.should be_success
@@ -124,12 +130,11 @@ describe "api", type: :integration do
             post url, params
             response.should_not be_success
             JSON.parse(response.body).should include(
-              {"message"=>"The record was not saved due to errors","errors"=>{ attrib =>["can't be blank"]} }
+              {"message"=>"The record was not saved due to errors"}
             )
           expect(TaskItem.count).to eq 0
           end
         end
-
       end
     end
 

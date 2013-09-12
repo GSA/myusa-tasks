@@ -12,7 +12,7 @@ module Api
       end
 
       def create
-        @task = Task.new(name: params[:name], description: params[:description])
+        @task = Task.new(params[:task])
 
         if @task.save
           render 'api/v1/tasks/create'
