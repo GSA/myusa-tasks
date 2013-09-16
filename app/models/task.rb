@@ -4,7 +4,6 @@ class Task < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :description
 
-  accepts_nested_attributes_for :task_items,
-    :reject_if => proc { |task_item| task_item['name'].blank? }
+  accepts_nested_attributes_for :task_items
 
 end

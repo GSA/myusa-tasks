@@ -124,6 +124,26 @@ describe "api", type: :integration do
           expect(Link.count).to eq 1
         end
 
+        it "fails when nested task items don't have the required attribute 'name'" do
+          params['task']['task_items_attributes'][0]['name'] = ''
+          post url, params
+          expect(response.success?).to eq false
+          expect(Task.count).to eq 0
+          expect(TaskItem.count).to eq 0
+          expect(Link.count).to eq 0
+        end
+
+        required_attributes = ["name","url"]
+        required_attributes.each do |attrib|
+          it "fails when nested task links don't have the required attribute '#{attrib}'" do
+            params['task']['task_items_attributes'][0]['links_attributes'][0][attrib] = ''
+            post url, params
+            expect(response.success?).to eq false
+            expect(Task.count).to eq 0
+            expect(TaskItem.count).to eq 0
+            expect(Link.count).to eq 0
+          end
+        end
 
       end
     end
