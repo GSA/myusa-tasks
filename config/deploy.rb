@@ -50,6 +50,5 @@ after 'deploy:setup', 'deploy:chown'
 after "deploy:restart", "deploy:cleanup"
 after "deploy:restart", "db:symlink_db"
 after "db:symlink_db", "deploy:migrate"
-after "deploy:migrate", "apache:restart"
-after "apache:restart", "deploy:cleanup"
+before "deploy:cleanup", "apache:restart"
 
